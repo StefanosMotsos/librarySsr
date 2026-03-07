@@ -6,6 +6,9 @@ import cf.library.libraryapp.dto.BookInsertDTO;
 import cf.library.libraryapp.dto.BookReadOnlyDTO;
 
 public interface IBookService {
+
     BookReadOnlyDTO saveBook(BookInsertDTO bookInsertDTO)
             throws EntityAlreadyExistsException, EntityInvalidArgumentException;
+
+    boolean isBookExists(String isbn);
 }

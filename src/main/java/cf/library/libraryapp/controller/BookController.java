@@ -7,6 +7,7 @@ import cf.library.libraryapp.dto.BookReadOnlyDTO;
 import cf.library.libraryapp.dto.CategoryReadOnlyDTO;
 import cf.library.libraryapp.service.IBookService;
 import cf.library.libraryapp.service.ICategoryService;
+import cf.library.libraryapp.validator.BookInsertValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ public class BookController {
 
     private final IBookService bookService;
     private final ICategoryService categoryService;
+    private final BookInsertValidator bookInsertValidator;
 
     @GetMapping("/insert")
     public String getBookForm(Model model) {
@@ -38,6 +40,9 @@ public class BookController {
     public String bookInsert(@Valid @ModelAttribute("bookInsertDTO") BookInsertDTO bookInsertDTO,
                              BindingResult bindingResult, Model model,
                              RedirectAttributes redirectAttributes) {
+
+        bookInsertValidator.validate(bookInsertDTO, bindingResult);
+
         if (bindingResult.hasErrors()) {
             return "book-insert";
         }

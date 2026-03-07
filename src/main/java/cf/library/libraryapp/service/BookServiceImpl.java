@@ -53,4 +53,10 @@ public class BookServiceImpl implements IBookService{
             throw e;
         }
     }
+
+    @Override
+    public boolean isBookExists(String isbn) {
+        return bookRepository.findByIsbn(isbn).isPresent();
+    }
+
 }
