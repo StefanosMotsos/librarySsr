@@ -6,12 +6,12 @@ import jakarta.validation.constraints.Size;
 
 public record BookInsertDTO(
 
-        @NotNull(message = "no null name")
-        @Size(min = 2, message = "at least 2 chars")
+        @NotNull
+        @Size(min = 2)
         String title,
 
-        @NotNull(message = "no null author")
-        @Size(min = 2, message = "at least 2 chars")
+        @NotNull
+        @Size(min = 2)
         String authorName,
 
         @Pattern(regexp = "^(97[89])?\\d{9}[\\dX]$", message = "isbn not valid")
@@ -19,7 +19,7 @@ public record BookInsertDTO(
 
         //9780306406157 9783161484100 9780140449136
 
-        @NotNull(message = "no null category")
+        @NotNull
         Long categoryId
     ){
 
