@@ -1,6 +1,7 @@
 package cf.library.libraryapp.controller;
 
 import cf.library.libraryapp.dto.BookInsertDTO;
+import cf.library.libraryapp.dto.BookReadOnlyDTO;
 import cf.library.libraryapp.dto.CategoryReadOnlyDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -27,13 +29,16 @@ public class BookController {
 
     @PostMapping("/insert")
     public String bookInsert(@Valid @ModelAttribute("BookInsertDTO") BookInsertDTO bookInsertDTO,
-                             BindingResult bindingResult, Model model) {
+                             BindingResult bindingResult, Model model,
+                             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "book-insert";
         }
 
-        try {
+        BookReadOnlyDTO bookReadOnlyDTO = new BookReadOnlyDTO("", "", "");
 
+        try {
+            redirectAttributes.addFlashAttribute("BookReadOnlyDTO", bookReadOnlyDTO);
         } catch ()
     }
 
