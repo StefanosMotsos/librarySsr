@@ -21,15 +21,15 @@
             <form class="w-75"
 
                 method="post"
-                th:insert="@{/books/insert}"
-                th:object="${BookInsertDTO}">
+                  th:action="@{/books/insert}"
+                  th:object="${bookInsertDTO}">
                 <div class="row g-5">
                     <div class="col-lg-6">
                         <div class="d-flex flex-column text-center">
                             <label th:for="*{title}" class="form-label fs-5 mb-1">Title:
                             </label>
                             <input th:field="*{title}" type="text" class="form-control">
-                            <div th:if="${fields.hasErrors('title')}">
+                            <div th:if="${#fields.hasErrors('title')}">
                                 <p th:errors="*{title}" class="text-danger small mb-0 py-1"></p>
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                             <label th:for="*{authorName}" class="form-label fs-5 mb-1">Author Name:
                             </label>
                             <input th:field="*{authorName}" type="text" class="form-control">
-                            <div th:if="${fields.hasErrors('authorName')}">
+                            <div th:if="${#fields.hasErrors('authorName')}">
                                 <p th:errors="*{authorName}" class="text-danger small mb-0 py-1"></p>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                             <label th:for="*{isbn}" class="form-label fs-5 mb-1">ISBN:
                             </label>
                             <input th:field="*{isbn}" type="text" class="form-control">
-                            <div th:if="${fields.hasErrors.('isbn')}">
+                            <div th:if="${#fields.hasErrors('isbn')}">
                                 <p th:errors="*{isbn}" class="text-danger small mb-0 py-1"></p>
                             </div>
                         </div>
@@ -59,22 +59,22 @@
 
                     <div class="col-lg-6">
                         <div class="d-flex flex-column text-center">
-                            <label th:for="*{category}" class="form-label fs-5 mb-1">Category:
+                            <label th:for="*{categoryId}" class="form-label fs-5 mb-1">Category:
                             </label>
                             <select th:field="*{categoryId}" class="form-select">
                                 <option value="" selected>Select Category</option>
-                                <option th:each="category : {categoryReadOnlyDTO}" th:value="${category_id}"
+                                <option th:each="category : ${categoriesReadOnlyDTO}" th:value="${category.id}"
                                 th:text="${category.name}"></option>
                             </select>
 
-                            <div th:if="${fields.hasErrors.('category')}">
-                                <p th:errors="${category}" class="text-danger small mb-0 py-1"></p>
+                            <div th:if="${#fields.hasErrors('categoryId')}">
+                                <p th:errors="*{categoryId}" class="text-danger small mb-0 py-1"></p>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-12 mt-5">
-                        <button type="button" class="btn btn-success text-white px-4 fs-4">Submit</button>
+                        <button type="submit" class="btn btn-success text-white px-4 fs-4">Submit</button>
                     </div>
 
                 </div>

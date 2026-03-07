@@ -1,8 +1,12 @@
 package cf.library.libraryapp.controller;
 
+import cf.library.libraryapp.core.exceptions.EntityAlreadyExistsException;
+import cf.library.libraryapp.core.exceptions.EntityInvalidArgumentException;
 import cf.library.libraryapp.dto.BookInsertDTO;
 import cf.library.libraryapp.dto.BookReadOnlyDTO;
 import cf.library.libraryapp.dto.CategoryReadOnlyDTO;
+import cf.library.libraryapp.service.IBookService;
+import cf.library.libraryapp.service.ICategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,25 +25,34 @@ import java.util.List;
 @RequestMapping("/books")
 public class BookController {
 
+    private final IBookService bookService;
+    private final ICategoryService categoryService;
+
     @GetMapping("/insert")
     public String getBookForm(Model model) {
-        model.addAttribute("BookInsertDTO", BookInsertDTO.empty());
+        model.addAttribute("bookInsertDTO", BookInsertDTO.empty());
         return "book-insert";
     }
 
     @PostMapping("/insert")
-    public String bookInsert(@Valid @ModelAttribute("BookInsertDTO") BookInsertDTO bookInsertDTO,
+    public String bookInsert(@Valid @ModelAttribute("bookInsertDTO") BookInsertDTO bookInsertDTO,
                              BindingResult bindingResult, Model model,
                              RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "book-insert";
         }
 
-        BookReadOnlyDTO bookReadOnlyDTO = new BookReadOnlyDTO("", "", "");
-
         try {
-            redirectAttributes.addFlashAttribute("BookReadOnlyDTO", bookReadOnlyDTO);
-        } catch ()
+
+            BookReadOnlyDTO bookReadOnlyDTO = bookService.saveBook(bookInsertDTO);
+            redirectAttributes.addFlashAttribute("bookReadOnlyDTO", bookReadOnlyDTO);
+
+            return "redirect:/books/success";
+
+        } catch (EntityAlreadyExistsException | EntityInvalidArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "book-insert";
+        }
     }
 
     @GetMapping("/success")
@@ -47,11 +60,8 @@ public class BookController {
         return "book-success";
     }
 
-    @ModelAttribute("CategoryReadOnlyDTO")
+    @ModelAttribute("categoriesReadOnlyDTO")
     public List<CategoryReadOnlyDTO> categories() {
-        return List.of(
-                new CategoryReadOnlyDTO(1L, "Sci-Fi"),
-                new CategoryReadOnlyDTO(2L, "Comedy"),
-                new CategoryReadOnlyDTO(3L, "Fantasy"));
+        return categoryService.findAllCategoriesSortedByName();
     }
 }
