@@ -10,6 +10,9 @@ import cf.library.libraryapp.service.ICategoryService;
 import cf.library.libraryapp.validator.BookInsertValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -58,6 +61,17 @@ public class BookController {
             model.addAttribute("errorMessage", e.getMessage());
             return "book-insert";
         }
+    }
+
+    @GetMapping({ "", "/"})
+    public String getPaginatedTeachers(@PageableDefault(size = 5, sort = "author")Pageable pageable,
+                                       Model model) {
+        Page<BookReadOnlyDTO> booksPage = bookService.getPaginatedTeachers(pageable);
+
+        model.addAttribute("books", booksPage.getContent());
+        model.addAttribute("page", booksPage);
+
+        return "books";
     }
 
     @GetMapping("/success")

@@ -15,7 +15,8 @@ public class Mapper {
     }
 
     public BookReadOnlyDTO mapToBookReadOnlyDTO(Book book) {
-        return new BookReadOnlyDTO(book.getUuid().toString(), book.getTitle(), book.getAuthor());
+        return new BookReadOnlyDTO(book.getUuid().toString(), book.getTitle(), book.getAuthor(),
+                book.getIsbn(), book.getCategory().getName());
     }
 
     public CategoryReadOnlyDTO mapToCategoryReadOnlyDTO(Category category) {

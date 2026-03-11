@@ -11,6 +11,8 @@ import cf.library.libraryapp.repository.BookRepository;
 import cf.library.libraryapp.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +31,7 @@ public class BookServiceImpl implements IBookService{
             throws EntityAlreadyExistsException, EntityInvalidArgumentException {
         try {
 
-            if (dto.isbn() != null && bookRepository.findByIsbn(dto.isbn()).isPresent()) {
+            if (dto.isbn() != null && isBookExists(dto.isbn())) {
                 throw new EntityAlreadyExistsException("Book with isbn= " + dto.isbn() + " already exists");
             }
 
@@ -55,6 +57,17 @@ public class BookServiceImpl implements IBookService{
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Page<BookReadOnlyDTO> getPaginatedTeachers(Pageable pageable) {
+        Page<Book> booksPage = bookRepository.findAll(pageable);
+        log.debug("Get paginated returned successfully page={} and size={}",
+                booksPage.getNumber(), booksPage.getSize());
+
+        return booksPage.map(mapper::mapToBookReadOnlyDTO);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public boolean isBookExists(String isbn) {
         return bookRepository.findByIsbn(isbn).isPresent();
     }

@@ -4,7 +4,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record BookInsertDTO(
+public record BookEditDTO(
+
+        @NotNull
+        String uuid,
 
         @NotNull
         @Size(min = 2)
@@ -20,8 +23,4 @@ public record BookInsertDTO(
         @NotNull
         Long categoryId
     ){
-
-    public static BookInsertDTO empty() {
-        return new BookInsertDTO("", "", "", 0L);
-    }
 }
