@@ -65,6 +65,16 @@ public class BookServiceImpl implements IBookService{
     @Transactional(readOnly = true)
     public Page<BookReadOnlyDTO> getPaginatedBooks(Pageable pageable) {
         Page<Book> booksPage = bookRepository.findAll(pageable);
+        log.debug("Get paginated (and deleted) returned successfully page={} and size={}",
+                booksPage.getNumber(), booksPage.getSize());
+
+        return booksPage.map(mapper::mapToBookReadOnlyDTO);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<BookReadOnlyDTO> getPaginatedBooksDeletedFalse(Pageable pageable) {
+        Page<Book> booksPage = bookRepository.findAllByDeletedFalse(pageable);
         log.debug("Get paginated returned successfully page={} and size={}",
                 booksPage.getNumber(), booksPage.getSize());
 
@@ -108,6 +118,25 @@ public class BookServiceImpl implements IBookService{
             throw e;
         } catch (EntityInvalidArgumentException e) {
             log.error("Update failed for teacher with uuid={}. Category id={} invalid", dto.uuid(), dto.categoryId(), e);
+            throw e;
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = EntityNotFoundException.class)
+    public BookReadOnlyDTO deleteBookByUUID(UUID uuid) throws EntityNotFoundException {
+
+        try {
+
+            Book book = bookRepository.findByUuidAndDeletedFalse(uuid)
+                    .orElseThrow(() -> new EntityNotFoundException("Book with uuid=" + uuid + " not found"));
+
+            book.softDelete();
+            log.info("Book with uuid={} deleted successfully", uuid);
+            return mapper.mapToBookReadOnlyDTO(book);
+
+        } catch (EntityNotFoundException e) {
+            log.error("Delete failed for book with uuid={}. Book not found", uuid, e);
             throw e;
         }
     }

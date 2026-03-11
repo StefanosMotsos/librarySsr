@@ -18,9 +18,12 @@ public interface IBookService {
 
     boolean isBookExists(String isbn);
     Page<BookReadOnlyDTO> getPaginatedBooks(Pageable pageable);
+    Page<BookReadOnlyDTO> getPaginatedBooksDeletedFalse(Pageable pageable);
 
     BookReadOnlyDTO updateBook(BookEditDTO bookEditDTO)
             throws EntityNotFoundException, EntityAlreadyExistsException, EntityInvalidArgumentException;
+
+    BookReadOnlyDTO deleteBookByUUID(UUID uuid) throws EntityNotFoundException;
 
     BookEditDTO getBookByUUID(UUID uuid) throws EntityNotFoundException;
 }

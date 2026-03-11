@@ -9,6 +9,7 @@ import cf.library.libraryapp.dto.BookReadOnlyDTO;
 import cf.library.libraryapp.dto.CategoryReadOnlyDTO;
 import cf.library.libraryapp.service.IBookService;
 import cf.library.libraryapp.service.ICategoryService;
+import cf.library.libraryapp.validator.BookEditValidator;
 import cf.library.libraryapp.validator.BookInsertValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class BookController {
     private final IBookService bookService;
     private final ICategoryService categoryService;
     private final BookInsertValidator bookInsertValidator;
+    private final BookEditValidator bookEditValidator;
 
     @GetMapping("/insert")
     public String getBookForm(Model model) {
@@ -66,7 +68,8 @@ public class BookController {
     @GetMapping({ "", "/"})
     public String getPaginatedBooks(@PageableDefault(size = 5, sort = "author")Pageable pageable,
                                        Model model) {
-        Page<BookReadOnlyDTO> booksPage = bookService.getPaginatedBooks(pageable);
+
+        Page<BookReadOnlyDTO> booksPage = bookService.getPaginatedBooksDeletedFalse(pageable);
 
         model.addAttribute("books", booksPage.getContent());
         model.addAttribute("page", booksPage);
@@ -91,6 +94,8 @@ public class BookController {
     public String updateBook(@Valid @ModelAttribute("bookEditDTO") BookEditDTO bookEditDTO,
                              BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
 
+        bookEditValidator.validate(bookEditDTO, bindingResult);
+
         if (bindingResult.hasErrors()) {
             return "book-edit";
         }
@@ -106,6 +111,19 @@ public class BookController {
 
     }
 
+    @PostMapping("/delete/{uuid}")
+    public String deleteBook(@PathVariable UUID uuid, Model model, RedirectAttributes redirectAttributes) {
+
+        try {
+            BookReadOnlyDTO dto = bookService.deleteBookByUUID(uuid);
+            redirectAttributes.addFlashAttribute("bookReadOnlyDTO", dto);
+            return "redirect:/books/delete-success";
+        } catch (EntityNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/books";
+        }
+    }
+
     @GetMapping("/success")
     public String bookSuccess(Model model) {
         return "book-success";
@@ -114,6 +132,11 @@ public class BookController {
     @GetMapping("/update-success")
     public String updateSuccess() {
         return "update-book-success";
+    }
+
+    @GetMapping("/delete-success")
+    public String deleteSuccess() {
+        return "delete-book-success";
     }
 
     @ModelAttribute("categoriesReadOnlyDTO")
