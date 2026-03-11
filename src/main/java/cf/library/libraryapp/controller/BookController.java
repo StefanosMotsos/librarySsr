@@ -2,6 +2,8 @@ package cf.library.libraryapp.controller;
 
 import cf.library.libraryapp.core.exceptions.EntityAlreadyExistsException;
 import cf.library.libraryapp.core.exceptions.EntityInvalidArgumentException;
+import cf.library.libraryapp.core.exceptions.EntityNotFoundException;
+import cf.library.libraryapp.dto.BookEditDTO;
 import cf.library.libraryapp.dto.BookInsertDTO;
 import cf.library.libraryapp.dto.BookReadOnlyDTO;
 import cf.library.libraryapp.dto.CategoryReadOnlyDTO;
@@ -16,13 +18,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -64,9 +64,9 @@ public class BookController {
     }
 
     @GetMapping({ "", "/"})
-    public String getPaginatedTeachers(@PageableDefault(size = 5, sort = "author")Pageable pageable,
+    public String getPaginatedBooks(@PageableDefault(size = 5, sort = "author")Pageable pageable,
                                        Model model) {
-        Page<BookReadOnlyDTO> booksPage = bookService.getPaginatedTeachers(pageable);
+        Page<BookReadOnlyDTO> booksPage = bookService.getPaginatedBooks(pageable);
 
         model.addAttribute("books", booksPage.getContent());
         model.addAttribute("page", booksPage);
@@ -74,9 +74,46 @@ public class BookController {
         return "books";
     }
 
+    @GetMapping("/edit/{uuid}")
+    public String getBookEdit(@PathVariable UUID uuid, Model model) {
+
+        try {
+            BookEditDTO bookEditDTO = bookService.getBookByUUID(uuid);
+            model.addAttribute("bookEditDTO", bookEditDTO);
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+        }
+
+        return "book-edit";
+    }
+
+    @PostMapping("/edit")
+    public String updateBook(@Valid @ModelAttribute("bookEditDTO") BookEditDTO bookEditDTO,
+                             BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "book-edit";
+        }
+
+        try {
+            BookReadOnlyDTO bookReadOnlyDTO = bookService.updateBook(bookEditDTO);
+            redirectAttributes.addFlashAttribute("bookReadOnlyDTO", bookReadOnlyDTO);
+            return "redirect:/books/update-success";
+        } catch (EntityNotFoundException | EntityAlreadyExistsException | EntityInvalidArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "teacher-edit";
+        }
+
+    }
+
     @GetMapping("/success")
     public String bookSuccess(Model model) {
         return "book-success";
+    }
+
+    @GetMapping("/update-success")
+    public String updateSuccess() {
+        return "update-book-success";
     }
 
     @ModelAttribute("categoriesReadOnlyDTO")

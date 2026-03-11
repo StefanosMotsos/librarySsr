@@ -4,10 +4,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.UUID;
+
 public record BookEditDTO(
 
         @NotNull
-        String uuid,
+        UUID uuid,
 
         @NotNull
         @Size(min = 2)
@@ -15,7 +17,7 @@ public record BookEditDTO(
 
         @NotNull
         @Size(min = 2)
-        String authorName,
+        String author,
 
         @Pattern(regexp = "^(97[89])?\\d{9}[\\dX]$")
         String isbn,

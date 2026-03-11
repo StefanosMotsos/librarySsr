@@ -37,11 +37,11 @@
 
                     <div class="col-lg-6">
                         <div class="d-flex flex-column text-center">
-                            <label th:for="*{authorName}" class="form-label fs-5 mb-1">Author Name:
+                            <label th:for="*{author}" class="form-label fs-5 mb-1">Author Name:
                             </label>
-                            <input th:field="*{authorName}" type="text" class="form-control">
-                            <div th:if="${#fields.hasErrors('authorName')}">
-                                <p th:errors="*{authorName}" class="text-danger small mb-0 py-1"></p>
+                            <input th:field="*{author}" type="text" class="form-control">
+                            <div th:if="${#fields.hasErrors('author')}">
+                                <p th:errors="*{author}" class="text-danger small mb-0 py-1"></p>
                             </div>
                         </div>
                     </div>

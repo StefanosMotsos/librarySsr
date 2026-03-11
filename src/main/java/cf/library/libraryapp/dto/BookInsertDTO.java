@@ -12,7 +12,7 @@ public record BookInsertDTO(
 
         @NotNull
         @Size(min = 2)
-        String authorName,
+        String author,
 
         @Pattern(regexp = "^(97[89])?\\d{9}[\\dX]$")
         String isbn,

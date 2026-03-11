@@ -1,5 +1,6 @@
 package cf.library.libraryapp.mapper;
 
+import cf.library.libraryapp.dto.BookEditDTO;
 import cf.library.libraryapp.dto.BookInsertDTO;
 import cf.library.libraryapp.dto.BookReadOnlyDTO;
 import cf.library.libraryapp.dto.CategoryReadOnlyDTO;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class Mapper {
 
     public Book mapToBookEntity(BookInsertDTO dto) {
-        return new Book(null, null, dto.title(), dto.authorName(), dto.isbn(), null);
+        return new Book(null, null, dto.title(), dto.author(), dto.isbn(), null);
     }
 
     public BookReadOnlyDTO mapToBookReadOnlyDTO(Book book) {
@@ -21,6 +22,11 @@ public class Mapper {
 
     public CategoryReadOnlyDTO mapToCategoryReadOnlyDTO(Category category) {
         return new CategoryReadOnlyDTO(category.getId(), category.getName());
+    }
+
+    public BookEditDTO mapToBookEditDTO(Book book) {
+        return new BookEditDTO(book.getUuid(), book.getTitle(), book.getAuthor(),
+                book.getIsbn(), book.getCategory().getId());
     }
 
 }
