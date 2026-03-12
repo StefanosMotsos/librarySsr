@@ -46,7 +46,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <div class="d-flex flex-column text-center">
                             <label th:for="*{isbn}" class="form-label fs-5 mb-1">ISBN:
                             </label>
@@ -57,7 +57,19 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
+                        <div class="d-flex flex-column text-center">
+                            <label th:for="*{publicationYear}" class="form-label fs-5 mb-1">
+                                Publication Year:
+                            </label>
+                            <input th:field="*{publicationYear}" type="number" class="form-control">
+                            <div th:if="${#fields.hasErrors('publicationYear')}">
+                                <p th:errors="*{publicationYear}" class="text-danger small mb-0 py-1"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
                         <div class="d-flex flex-column text-center">
                             <label th:for="*{categoryId}" class="form-label fs-5 mb-1">Category:
                             </label>

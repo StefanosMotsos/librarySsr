@@ -32,6 +32,9 @@ public class Book extends AbstractEntity {
     @Column(unique = true)
     private String isbn;
 
+    @Column(nullable = false, name = "publication_year")
+    private Integer publicationYear;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;

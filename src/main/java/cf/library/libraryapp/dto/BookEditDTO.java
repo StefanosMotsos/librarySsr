@@ -1,8 +1,6 @@
 package cf.library.libraryapp.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.util.UUID;
 
@@ -21,6 +19,11 @@ public record BookEditDTO(
 
         @Pattern(regexp = "^(97[89])?\\d{9}[\\dX]$")
         String isbn,
+
+        @NotNull
+        @Min(value = 1000)
+        @Max(value = 2026)
+        Integer publicationYear,
 
         @NotNull
         Long categoryId

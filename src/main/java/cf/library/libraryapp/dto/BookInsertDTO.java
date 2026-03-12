@@ -1,8 +1,6 @@
 package cf.library.libraryapp.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public record BookInsertDTO(
 
@@ -18,10 +16,15 @@ public record BookInsertDTO(
         String isbn,
 
         @NotNull
+        @Min(value = 1000)
+        @Max(value = 2026)
+        Integer publicationYear,
+
+        @NotNull
         Long categoryId
     ){
 
     public static BookInsertDTO empty() {
-        return new BookInsertDTO("", "", "", 0L);
+        return new BookInsertDTO("", "", "", null, 0L);
     }
 }

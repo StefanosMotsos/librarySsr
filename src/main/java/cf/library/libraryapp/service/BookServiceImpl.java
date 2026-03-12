@@ -91,6 +91,7 @@ public class BookServiceImpl implements IBookService{
 
             book.setTitle(dto.title());
             book.setAuthor(dto.author());
+            book.setPublicationYear(dto.publicationYear());
 
             if (!book.getIsbn().equals(dto.isbn())) {
                 if (bookRepository.findByIsbn(dto.isbn()).isPresent()) {

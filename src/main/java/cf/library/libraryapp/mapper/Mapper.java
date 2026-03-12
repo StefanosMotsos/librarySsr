@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 public class Mapper {
 
     public Book mapToBookEntity(BookInsertDTO dto) {
-        return new Book(null, null, dto.title(), dto.author(), dto.isbn(), null);
+        return new Book(null, null, dto.title(), dto.author(), dto.isbn(), dto.publicationYear(), null);
     }
 
     public BookReadOnlyDTO mapToBookReadOnlyDTO(Book book) {
         return new BookReadOnlyDTO(book.getUuid().toString(), book.getTitle(), book.getAuthor(),
-                book.getIsbn(), book.getCategory().getName());
+                book.getIsbn(), book.getPublicationYear(), book.getCategory().getName());
     }
 
     public CategoryReadOnlyDTO mapToCategoryReadOnlyDTO(Category category) {
@@ -26,7 +26,7 @@ public class Mapper {
 
     public BookEditDTO mapToBookEditDTO(Book book) {
         return new BookEditDTO(book.getUuid(), book.getTitle(), book.getAuthor(),
-                book.getIsbn(), book.getCategory().getId());
+                book.getIsbn(), book.getPublicationYear(), book.getCategory().getId());
     }
 
 }
