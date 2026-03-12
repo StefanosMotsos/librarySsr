@@ -82,6 +82,16 @@ public class BookServiceImpl implements IBookService{
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Page<BookReadOnlyDTO> searchBooks(String query, Pageable pageable) {
+        Page<Book> booksPage = bookRepository.findByTitleContainingIgnoreCaseAndDeletedFalse(query, pageable);
+
+        log.debug("Search for '{}' returned {} results", query, booksPage.getTotalElements());
+
+        return booksPage.map(mapper::mapToBookReadOnlyDTO);
+    }
+
+    @Override
     @Transactional(rollbackFor = {EntityAlreadyExistsException.class, EntityInvalidArgumentException.class, EntityNotFoundException.class})
     public BookReadOnlyDTO updateBook(BookEditDTO dto)
             throws EntityNotFoundException, EntityAlreadyExistsException, EntityInvalidArgumentException {

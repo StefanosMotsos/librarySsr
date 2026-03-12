@@ -66,14 +66,25 @@ public class BookController {
     }
 
     @GetMapping({ "", "/"})
-    public String getPaginatedBooks(@PageableDefault(size = 5, sort = "author")Pageable pageable,
-                                       Model model) {
+    public String getPaginatedBooks(
+            @RequestParam(required = false) String search,
+            @PageableDefault(size = 5, sort = "author") Pageable pageable,
+            Model model) {
 
-        Page<BookReadOnlyDTO> booksPage = bookService.getPaginatedBooksDeletedFalse(pageable);
+        Page<BookReadOnlyDTO> booksPage;
+
+        if (search != null && !search.trim().isEmpty()) {
+
+            booksPage = bookService.searchBooks(search.trim(), pageable);
+            model.addAttribute("search", search);
+
+        } else {
+
+            booksPage = bookService.getPaginatedBooksDeletedFalse(pageable);
+        }
 
         model.addAttribute("books", booksPage.getContent());
         model.addAttribute("page", booksPage);
-
         return "books";
     }
 
