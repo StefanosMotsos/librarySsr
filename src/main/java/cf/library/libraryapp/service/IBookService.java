@@ -29,4 +29,5 @@ public interface IBookService {
     BookReadOnlyDTO deleteBookByUUID(UUID uuid) throws EntityNotFoundException;
 
     BookEditDTO getBookByUUID(UUID uuid) throws EntityNotFoundException;
+    BookEditDTO getBookByUUIDDeletedFalse(UUID uuid) throws EntityNotFoundException;
 }

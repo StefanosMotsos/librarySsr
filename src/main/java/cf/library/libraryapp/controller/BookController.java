@@ -92,7 +92,7 @@ public class BookController {
     public String getBookEdit(@PathVariable UUID uuid, Model model) {
 
         try {
-            BookEditDTO bookEditDTO = bookService.getBookByUUID(uuid);
+            BookEditDTO bookEditDTO = bookService.getBookByUUIDDeletedFalse(uuid);
             model.addAttribute("bookEditDTO", bookEditDTO);
         } catch (EntityNotFoundException e) {
             model.addAttribute("errorMessage", e.getMessage());

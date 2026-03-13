@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ public class BookServiceImpl implements IBookService{
     private final Mapper mapper;
 
     @Override
+    @PreAuthorize("hasAuthority('INSERT_BOOK')")
     @Transactional(rollbackFor = {EntityAlreadyExistsException.class, EntityInvalidArgumentException.class})
     public BookReadOnlyDTO saveBook(BookInsertDTO dto)
             throws EntityAlreadyExistsException, EntityInvalidArgumentException {
@@ -62,6 +64,7 @@ public class BookServiceImpl implements IBookService{
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional(readOnly = true)
     public Page<BookReadOnlyDTO> getPaginatedBooks(Pageable pageable) {
         Page<Book> booksPage = bookRepository.findAll(pageable);
@@ -72,6 +75,7 @@ public class BookServiceImpl implements IBookService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('VIEW_BOOKS')")
     @Transactional(readOnly = true)
     public Page<BookReadOnlyDTO> getPaginatedBooksDeletedFalse(Pageable pageable) {
         Page<Book> booksPage = bookRepository.findAllByDeletedFalse(pageable);
@@ -82,6 +86,7 @@ public class BookServiceImpl implements IBookService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('VIEW_BOOKS')")
     @Transactional(readOnly = true)
     public Page<BookReadOnlyDTO> searchBooks(String query, Pageable pageable) {
         Page<Book> booksPage = bookRepository.findByTitleContainingIgnoreCaseAndDeletedFalse(query, pageable);
@@ -92,6 +97,7 @@ public class BookServiceImpl implements IBookService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('EDIT_BOOKS')")
     @Transactional(rollbackFor = {EntityAlreadyExistsException.class, EntityInvalidArgumentException.class, EntityNotFoundException.class})
     public BookReadOnlyDTO updateBook(BookEditDTO dto)
             throws EntityNotFoundException, EntityAlreadyExistsException, EntityInvalidArgumentException {
@@ -134,6 +140,7 @@ public class BookServiceImpl implements IBookService{
     }
 
     @Override
+    @PreAuthorize("hasAuthority('DELETE_BOOKS')")
     @Transactional(rollbackFor = EntityNotFoundException.class)
     public BookReadOnlyDTO deleteBookByUUID(UUID uuid) throws EntityNotFoundException {
 
@@ -153,10 +160,26 @@ public class BookServiceImpl implements IBookService{
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional(readOnly = true)
     public BookEditDTO getBookByUUID(UUID uuid) throws EntityNotFoundException {
         try {
             Book book = bookRepository.findByUuid(uuid)
+                    .orElseThrow(() -> new EntityNotFoundException("Book with uuid=" + uuid + " not found"));
+            log.debug("Get any book by uuid={} returned successfully", uuid);
+            return mapper.mapToBookEditDTO(book);
+        } catch (EntityNotFoundException e) {
+            log.error("Get book by uuid={} failed", uuid, e);
+            throw e;
+        }
+    }
+
+    @Override
+    @PreAuthorize("hasAuthority('EDIT_BOOKS')")
+    @Transactional(readOnly = true)
+    public BookEditDTO getBookByUUIDDeletedFalse(UUID uuid) throws EntityNotFoundException {
+        try {
+            Book book = bookRepository.findByUuidAndDeletedFalse(uuid)
                     .orElseThrow(() -> new EntityNotFoundException("Book with uuid=" + uuid + " not found"));
             log.debug("Get book by uuid={} returned successfully", uuid);
             return mapper.mapToBookEditDTO(book);
