@@ -29,7 +29,7 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
@@ -67,5 +67,16 @@ public class User extends AbstractEntity implements UserDetails {
     @Override
     public boolean isAccountNonExpired() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(getUsername(), user.getUsername());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getUsername());
     }
 }
