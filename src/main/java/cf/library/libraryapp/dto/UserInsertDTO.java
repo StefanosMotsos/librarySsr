@@ -16,4 +16,8 @@ public record UserInsertDTO(
 
         @NotNull
         Long roleId) {
+
+    public static UserInsertDTO empty() {
+        return new UserInsertDTO("", "", 0L);
+    }
 }

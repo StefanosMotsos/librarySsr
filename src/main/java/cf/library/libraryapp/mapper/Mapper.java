@@ -1,10 +1,8 @@
 package cf.library.libraryapp.mapper;
 
-import cf.library.libraryapp.dto.BookEditDTO;
-import cf.library.libraryapp.dto.BookInsertDTO;
-import cf.library.libraryapp.dto.BookReadOnlyDTO;
-import cf.library.libraryapp.dto.CategoryReadOnlyDTO;
+import cf.library.libraryapp.dto.*;
 import cf.library.libraryapp.model.Book;
+import cf.library.libraryapp.model.User;
 import cf.library.libraryapp.model.static_data.Category;
 import org.springframework.stereotype.Component;
 
@@ -29,4 +27,13 @@ public class Mapper {
                 book.getIsbn(), book.getPublicationYear(), book.getCategory().getId());
     }
 
+    //User Entity-DTO Mapping:
+
+    public User mapToUserEntity(UserInsertDTO userInsertDTO) {
+        return new User(userInsertDTO.username(), userInsertDTO.password());
+    }
+
+    public UserReadOnlyDTO mapToUserReadOnlyDTO(User user) {
+        return new UserReadOnlyDTO(user.getUuid().toString(), user.getUsername(), user.getRole().getName());
+    }
 }
