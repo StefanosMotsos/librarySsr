@@ -1,11 +1,11 @@
 -- Insert roles
-INSERT INTO roles (name)
+INSERT IGNORE INTO roles (name)
 VALUES
     ('ADMIN'),
     ('EMPLOYEE');
 
 -- Insert capabilities
-INSERT INTO capabilities (name, description)
+INSERT IGNORE INTO capabilities (name, description)
 VALUES
     ('INSERT_BOOK', 'Add a new book'),
     ('VIEW_BOOKS', 'View book list and details'),
@@ -25,4 +25,4 @@ SELECT r.id, c.id
 FROM roles r
 JOIN capabilities c
 WHERE r.name = 'EMPLOYEE'
-  AND c.name IN ('VIEW_TEACHERS');
+  AND c.name IN ('VIEW_BOOKS');

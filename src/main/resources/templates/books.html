@@ -51,7 +51,7 @@
                 <th class="border-end border-black">ISBN</th>
                 <th class="border-end border-black">Publication Year</th>
                 <th class="border-end border-black">Category</th>
-                <th class="border-end border-black" sec:authorize="hasAuthority('EDIT_BOOKS', 'DELETE_BOOKS')">Actions</th>
+                <th class="border-end border-black" sec:authorize="hasAuthority('EDIT_BOOKS') or hasAuthority('DELETE_BOOKS')">Actions</th>
             </tr>
             </thead>
 
@@ -63,7 +63,7 @@
                 <td th:text="${book.isbn()}"></td>
                 <td th:text="${book.publicationYear()}"></td>
                 <td th:text="${book.category()}"></td>
-                <td sec:authorize="hasAuthority('EDIT_BOOKS', 'DELETE_BOOKS')">
+                <td sec:authorize="hasAuthority('EDIT_BOOKS') or hasAuthority('DELETE_BOOKS')">
                     <a th:href="@{/books/edit/{uuid}(uuid=${book.uuid})}" class="btn btn-sm btn-outline-success">Edit</a>
                     <form th:action="@{/books/delete/{uuid}(uuid=${book.uuid})}"
                           method="post"
