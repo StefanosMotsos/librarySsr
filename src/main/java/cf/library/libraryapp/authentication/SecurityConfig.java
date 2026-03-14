@@ -23,6 +23,7 @@ public class SecurityConfig {
     private final AuthenticationSuccessHandler authSuccessHandler;
     private final AuthenticationFailureHandler authFailureHandler;
 
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
