@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org">
+<html  xmlns:th="http://www.thymeleaf.org"
+       xmlns:sec="http://www.thymeleaf.org/extras/springsecurity">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +32,7 @@
             </div>
         </form>
 
-        <div class="mb-3 d-flex justify-content-end mx-auto">
+        <div sec:authorize="hasAuthority('INSERT_BOOK')" class="mb-3 d-flex justify-content-end mx-auto">
             <a th:href="@{/books/insert}" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> Insert Book
             </a>
@@ -41,7 +42,7 @@
             <p th:text="${errorMessage}"></p>
         </div>
 
-        <table class="mt-5 border border-black" style="width: 95vw;">
+        <table class="mt-5 border border-black" style="width: 95vw;" sec:authorize="hasAuthority('VIEW_BOOKS')">
             <thead class="bg-success text-white border border-black">
             <tr>
                 <th class="border-end border-black">UUID</th>
@@ -50,7 +51,7 @@
                 <th class="border-end border-black">ISBN</th>
                 <th class="border-end border-black">Publication Year</th>
                 <th class="border-end border-black">Category</th>
-                <th class="border-end border-black">Actions</th>
+                <th class="border-end border-black" sec:authorize="hasAuthority('EDIT_BOOKS', 'DELETE_BOOKS')">Actions</th>
             </tr>
             </thead>
 
@@ -62,7 +63,7 @@
                 <td th:text="${book.isbn()}"></td>
                 <td th:text="${book.publicationYear()}"></td>
                 <td th:text="${book.category()}"></td>
-                <td>
+                <td sec:authorize="hasAuthority('EDIT_BOOKS', 'DELETE_BOOKS')">
                     <a th:href="@{/books/edit/{uuid}(uuid=${book.uuid})}" class="btn btn-sm btn-outline-success">Edit</a>
                     <form th:action="@{/books/delete/{uuid}(uuid=${book.uuid})}"
                           method="post"

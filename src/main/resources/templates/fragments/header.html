@@ -1,5 +1,6 @@
 <header th:fragment="headerFragment"
-        xmlns:th="http://www.thymeleaf.org">
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/springsecurity">
     <div class="min-vw-100 h-25 bg-success border-bottom border-5 border-success-subtle">
         <div class="d-flex justify-content-around align-items-center w-75 gap-5 me-2">
             <a th:href="@{/}" class="text-decoration-none">
@@ -8,6 +9,18 @@
             <span class="ms-5 ps-5 fs-3 text-white">
                     A library for the world
             </span>
+            <div class="d-flex justify-content-end align-items-center w-50 me-2 text-white">
+                <span sec:authorize="isAuthenticated()" th:text="${#authentication.name}"></span>
+                <form sec:authorize="isAuthenticated()"
+                      th:action="@{/logout}"
+                      method="post"
+                      style="display: inline">
+
+                    <button type="submit" class="text-dark text-decoration-none me-2" style="cursor: pointer">
+                        Έξοδος
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </header>
