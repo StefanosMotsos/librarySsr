@@ -15,6 +15,10 @@ java {
 	}
 }
 
+bootJar {
+    archiveFileName = "libraryapp.jar"
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
