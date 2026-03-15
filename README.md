@@ -1,4 +1,4 @@
-## librarySsr
+## Library SSR
 
 Server-side rendered library management system built with **Spring Boot 3**, **Thymeleaf**, **Spring Security**, **Spring Data JPA**, **Flyway**, and **MySQL**. The app provides basic library features such as managing books and users with authentication/authorization and server-side rendered HTML views.
 
